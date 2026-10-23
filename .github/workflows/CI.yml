@@ -43,7 +43,19 @@ jobs:
         with:
           path: ${{ github.workspace }}
 
-      # 2. Run tests (Linux uses xvfb-run, Windows uses the local Mesa DLLs)
+      # 2. Force Windows to use Mesa's opengl32.dll instead of System32
+      - name: Copy Mesa DLLs to Julia Bin Directory
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $juliaBin = & julia -e "print(Sys.BINDIR)"
+          Write-Host "Julia bin directory: $juliaBin"
+          Get-ChildItem -Path "${{ github.workspace }}" -Recurse -Filter "opengl32.dll" | ForEach-Object {
+              Copy-Item $_.FullName -Destination $juliaBin -Force
+              Write-Host "Copied $($_.FullName) to $juliaBin"
+          }
+
+      # 3. Run tests (Linux uses xvfb-run, Windows uses the local Mesa DLLs)
       - uses: julia-actions/julia-runtest@v1
         with:
             prefix: ${{ runner.os == 'Linux' && 'xvfb-run -a' || '' }}
