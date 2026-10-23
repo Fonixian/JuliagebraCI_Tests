@@ -3,9 +3,10 @@ module Juliagebra
 using ModernGL
 using JuliaGLM
 using LinearAlgebra
-using GLFW
-using CImGui
-using ImPlot
+using LazyModules
+@lazy import GLFW = "f7f18e0c-5ee9-5ccd-a5bf-e8befd85ed98"
+@lazy import CImGui = "5d785b6c-b76f-510e-a07c-3070796c7e87"
+@lazy import ImPlot = "e8efc688-5342-4ad4-b4ba-9025a731b363"
 using DataStructures
 using ThreadPinning
 using BitFlags
